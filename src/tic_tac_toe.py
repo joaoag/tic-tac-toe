@@ -1,5 +1,7 @@
-class Game:
+class BoardFullException(Exception):
+    pass
 
+class Game:
     def __init__(self):
         self.moves = []
 
@@ -18,6 +20,6 @@ class Game:
         return self.moves
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     game = Game()
     game.begin_game()
