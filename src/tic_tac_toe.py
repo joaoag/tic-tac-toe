@@ -1,3 +1,6 @@
+from typing import List
+
+
 class BoardFullException(Exception):
     pass
 
@@ -21,10 +24,10 @@ class Board:
             self.boundary,
         ]
 
-    def get_board_rows(self):
+    def get_board_rows(self) -> List[str]:
         return self.board_rows
 
-    def get_board(self):
+    def get_board(self) -> str:
         board = "".join(self.get_board_rows())
         return board
 
@@ -48,10 +51,10 @@ class Game:
         else:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
-    def get_moves(self):
+    def get_moves(self) -> list:
         return self.moves
 
-    def count_moves(self):
+    def count_moves(self) -> int:
         return len(self.get_moves())
 
 
