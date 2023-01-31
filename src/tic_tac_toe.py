@@ -24,12 +24,13 @@ class Board:
             self.boundary,
         ]
 
-    def get_board_rows(self) -> List[str]:
+    def _get_board_rows(self) -> List[str]:
         return self.board_rows
 
     def get_board(self) -> str:
-        board = "".join(self.get_board_rows())
+        board = "".join(self._get_board_rows())
         return board
+
 
 
 class Game:
@@ -51,11 +52,11 @@ class Game:
         else:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
-    def get_moves(self) -> list:
+    def _get_moves(self) -> list:
         return self.moves
 
     def count_moves(self) -> int:
-        return len(self.get_moves())
+        return len(self._get_moves())
 
 
 if __name__ == "__main__":

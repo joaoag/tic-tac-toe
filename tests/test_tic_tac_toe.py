@@ -11,7 +11,7 @@ def test_game_stores_user_input(monkeypatch):
     game = Game(MagicMock)
     game.begin_game()
     expected = [1]
-    actual = game.get_moves()
+    actual = game._get_moves()
     assert expected == actual
 
 
@@ -37,3 +37,18 @@ def test_board_shows_player_the_board():
 """
     actual = board.get_board()
     assert expected == actual
+
+
+def test_board_can_be_updated():
+    expected = """
+     |     |     
+-----|-----|-----
+     |  X  |     
+-----|-----|-----
+     |     |     
+"""
+    board = Board()
+    board.update_board("X", 5)
+    actual = board.get_board()
+    assert expected == actual
+
