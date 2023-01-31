@@ -22,7 +22,7 @@ class Board:
         ]
 
     def get_board_rows(self):
-        return self.board
+        return self.board_rows
 
     def get_board(self):
         board = "".join(self.get_board_rows())
