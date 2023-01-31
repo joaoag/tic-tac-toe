@@ -5,9 +5,34 @@ class BoardFullException(Exception):
 MAXIMUM_MOVES = 9
 
 
-class Game:
+class Board:
+    boundary = "\n"
+    y_dividers = "     |     |     \n"
+    xy_dividers = "-----|-----|-----\n"
+
     def __init__(self):
+        self.board_rows = [
+            self.boundary,
+            self.y_dividers,
+            self.xy_dividers,
+            self.y_dividers,
+            self.xy_dividers,
+            self.y_dividers,
+            self.boundary,
+        ]
+
+    def get_board_rows(self):
+        return self.board
+
+    def get_board(self):
+        board = "".join(self.get_board_rows())
+        return board
+
+
+class Game:
+    def __init__(self, board: Board):
         self.moves = []
+        self.board = board
 
     def begin_game(self):
         move = self.prompt()

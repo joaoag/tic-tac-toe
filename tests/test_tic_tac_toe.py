@@ -1,14 +1,14 @@
 from io import StringIO
-
+from unittest.mock import MagicMock
 import pytest
 
-from tic_tac_toe import Game, BoardFullException
+from tic_tac_toe import Game, BoardFullException, Board
 
 
 def test_game_stores_user_input(monkeypatch):
     first_move = StringIO("1\n")
     monkeypatch.setattr("sys.stdin", first_move)
-    game = Game()
+    game = Game(MagicMock)
     game.begin_game()
     expected = [1]
     actual = game.get_moves()
@@ -16,7 +16,7 @@ def test_game_stores_user_input(monkeypatch):
 
 
 def test_game_only_allows_nine_moves():
-    game = Game()
+    game = Game(MagicMock)
     game.moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     with pytest.raises(
         BoardFullException, match="Sorry, the board is full so the game is over"
@@ -24,15 +24,16 @@ def test_game_only_allows_nine_moves():
         game.add_move(10)
 
 
-def test_game_shows_player_the_board():
-    game = Game()
+def test_board_shows_player_the_board():
+    board = Board()
 
-    expected = """      
-         |     |     
-    -----|-----|-----
-         |     |     
-    -----|-----|-----
-         |     |     
-    """
-    actual = game.get_board()
+    expected = """
+     |     |     
+-----|-----|-----
+     |     |     
+-----|-----|-----
+     |     |     
+
+"""
+    actual = board.get_board()
     assert expected == actual
