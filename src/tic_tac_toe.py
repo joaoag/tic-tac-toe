@@ -2,7 +2,6 @@ class Game:
 
     def __init__(self):
         self.moves = []
-        self.begin_game()
 
     def begin_game(self):
         move = self.prompt()
@@ -19,4 +18,6 @@ class Game:
         return self.moves
 
 
-
+if __name__ == '__main__':
+    game = Game()
+    game.begin_game()
