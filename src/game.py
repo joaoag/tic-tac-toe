@@ -13,6 +13,7 @@ class Game:
         self.moves = []
         self.board = board
         self.play_order = dict()
+        self._current_player = ""
 
     def get_move(self):
         move = self.prompt()
@@ -29,6 +30,7 @@ class Game:
             return "Sorry, that's not a valid character, you must pick X or O"
 
         self._set_play_order(first_character)
+        self._set_current_player(first_character)
 
     def _set_play_order(self, first_character):
         second_character = "0" if first_character == "X" else "X"
@@ -38,13 +40,27 @@ class Game:
         return self.play_order
 
     def add_move(self, position):
-        if self.count_moves() < MAXIMUM_MOVES:
-            self.moves.append(position)
-        else:
+        pre_turn_move_count = self._get_current_move()
+        if pre_turn_move_count == MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
+
+        self.moves.append(position)
+        post_turn_move_count = self._get_current_move()
+
+        if post_turn_move_count % 2 == 0:
+            self._set_current_player(self.play_order[2])
+
+    def _set_current_player(self, player):
+        self._current_player = player
+
+    def _get_current_player(self):
+        return self._current_player
 
     def _get_moves(self) -> list:
         return self.moves
 
     def count_moves(self) -> int:
         return len(self._get_moves())
+
+    def _get_current_move(self) -> int:
+        return len(self._get_moves()) + 1

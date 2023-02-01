@@ -53,13 +53,17 @@ def test_game_alternates_players(monkeypatch):
     first_move = StringIO("X\n9")
     monkeypatch.setattr("sys.stdin", first_move)
     game = Game(MagicMock)
-    game.request_first_character() # first player chooses X
-    # current player should be X
-    game.get_move() # X is placed at 9
-    # current player should now be O
-    expected = "0"
-    actual = game._get_current_player()
-    assert expected == actual
+    game.request_first_character() # player chooses X
+
+    expected_first_player = "X"
+    expected_second_player = "0"
+
+    actual_first_player = game._get_current_player()
+    game.get_move()
+    actual_second_player = game._get_current_player()
+
+    assert expected_first_player == actual_first_player
+    assert expected_second_player == actual_second_player
 
 
 
