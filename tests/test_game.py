@@ -29,7 +29,10 @@ def test_game_gets_and_saves_players_characters(monkeypatch):
     monkeypatch.setattr("sys.stdin", first_player_choice)
     game = Game(MagicMock)
     game.request_first_character()
-    expected = "X"
-    actual = game.get_first_character()
-
+    expected = {
+        1: "O",
+        2: "X"
+    }
+    actual = game._get_play_order()
+    assert expected == actual
 
