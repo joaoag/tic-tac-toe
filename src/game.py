@@ -14,7 +14,7 @@ class Game:
         self.board = board
         self.play_order = dict()
 
-    def begin_game(self):
+    def get_move(self):
         move = self.prompt()
         self.add_move(move)
 
@@ -22,7 +22,7 @@ class Game:
         next_move = int(input("Please enter your move"))
         return next_move
 
-    def request_first_character(self):
+    def request_first_character(self) -> str | None:
         first_character = input("Please enter player one's character: X or O")
         first_character = first_character.strip().upper()
         if first_character not in ["X", "O"]:
@@ -34,7 +34,7 @@ class Game:
         second_character = "0" if first_character == "X" else "X"
         self.play_order = {1: first_character, 2: second_character}
 
-    def _get_play_order(self):
+    def _get_play_order(self) -> dict:
         return self.play_order
 
     def add_move(self, position):

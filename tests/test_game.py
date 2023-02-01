@@ -9,7 +9,7 @@ def test_game_stores_user_input(monkeypatch):
     first_move = StringIO("1\n")
     monkeypatch.setattr("sys.stdin", first_move)
     game = Game(MagicMock)
-    game.begin_game()
+    game.get_move()
     expected = [1]
     actual = game._get_moves()
     assert expected == actual
@@ -47,3 +47,20 @@ def test_game_only_allows_player_to_choose_x_or_o(monkeypatch):
 
     assert expected_state == actual_state
     assert expected_message == actual_message
+
+
+def test_game_alternates_players(monkeypatch):
+    first_move = StringIO("X\n9")
+    monkeypatch.setattr("sys.stdin", first_move)
+    game = Game(MagicMock)
+    game.request_first_character() # first player chooses X
+    # current player should be X
+    game.get_move() # X is placed at 9
+    # current player should now be O
+    expected = "0"
+    actual = game._get_current_player()
+    assert expected == actual
+
+
+
+
