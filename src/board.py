@@ -1,4 +1,6 @@
 class Board:
+    xy_divider = "-----|-----|-----"
+
     def __init__(self):
         self.cells = {
             1: " ",
@@ -24,5 +26,3 @@ class Board:
   {self.cells[7]}  |  {self.cells[8]}  |  {self.cells[9]}  
 """
         return board
-
-    xy_divider = "-----|-----|-----"
