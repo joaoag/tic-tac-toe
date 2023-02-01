@@ -22,3 +22,5 @@ def test_game_only_allows_nine_moves():
         BoardFullException, match="Sorry, the board is full so the game is over"
     ):
         game.add_move(10)
+
+
