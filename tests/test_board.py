@@ -31,4 +31,3 @@ def test_board_can_be_filled_with_noughts_and_crosses():
 
     actual = board.get_board()
     assert expected == actual
-

@@ -32,10 +32,7 @@ class Game:
 
     def _set_play_order(self, first_character):
         second_character = "0" if first_character == "X" else "X"
-        self.play_order = {
-            1: first_character,
-            2: second_character
-        }
+        self.play_order = {1: first_character, 2: second_character}
 
     def _get_play_order(self):
         return self.play_order
@@ -51,4 +48,3 @@ class Game:
 
     def count_moves(self) -> int:
         return len(self._get_moves())
-
