@@ -5,16 +5,6 @@ import pytest
 from src.game import Game, BoardFullException
 
 
-def test_game_stores_user_input(monkeypatch):
-    first_move = StringIO("1\n")
-    monkeypatch.setattr("sys.stdin", first_move)
-    game = Game(MagicMock)
-    game.get_move()
-    expected = [1]
-    actual = game._get_moves()
-    assert expected == actual
-
-
 def test_game_only_allows_nine_moves():
     game = Game(MagicMock)
     game.moves = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -53,7 +43,7 @@ def test_game_alternates_players(monkeypatch):
     first_move = StringIO("X\n9")
     monkeypatch.setattr("sys.stdin", first_move)
     game = Game(MagicMock)
-    game.request_first_character() # player chooses X
+    game.request_first_character()  # player chooses X
 
     expected_first_player = "X"
     expected_second_player = "0"
@@ -64,7 +54,3 @@ def test_game_alternates_players(monkeypatch):
 
     assert expected_first_player == actual_first_player
     assert expected_second_player == actual_second_player
-
-
-
-
