@@ -39,18 +39,24 @@ class Game:
     def _get_play_order(self) -> dict:
         return self.play_order
 
+    def _is_space_on_board(self):
+        moves_so_far = self._count_moves()
+        self._validate_count(moves_so_far)
+
     def _validate_count(self, count: int):
         if count == MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
     def add_move(self, position):
-        moves_so_far = self._count_moves()
-        self._validate_count(moves_so_far)
+        self._is_space_on_board()
 
         self.moves.append(position)
 
         post_turn_move_count = self._get_current_move()
-        if post_turn_move_count % 2 == 0:
+        self._switch_players(post_turn_move_count)
+
+    def _switch_players(self, current_move):
+        if current_move % 2 == 0:
             self._set_current_player(self.play_order[2])
         else:
             self._set_current_player(self.play_order[1])
