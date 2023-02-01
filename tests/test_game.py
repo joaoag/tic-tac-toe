@@ -2,7 +2,7 @@ from io import StringIO
 from unittest.mock import MagicMock
 import pytest
 
-from tic_tac_toe import Game, BoardFullException, Board
+from src.game import Game, BoardFullException
 
 
 def test_game_stores_user_input(monkeypatch):
@@ -22,33 +22,3 @@ def test_game_only_allows_nine_moves():
         BoardFullException, match="Sorry, the board is full so the game is over"
     ):
         game.add_move(10)
-
-
-def test_board_shows_player_the_board():
-    board = Board()
-
-    expected = """
-     |     |     
------|-----|-----
-     |     |     
------|-----|-----
-     |     |     
-
-"""
-    actual = board.get_board()
-    assert expected == actual
-
-
-def test_board_can_be_updated():
-    expected = """
-     |     |     
------|-----|-----
-     |  X  |     
------|-----|-----
-     |     |     
-"""
-    board = Board()
-    board.update_board("X", 5)
-    actual = board.get_board()
-    assert expected == actual
-

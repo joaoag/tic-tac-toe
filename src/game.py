@@ -1,4 +1,4 @@
-from typing import List
+from board import Board
 
 
 class BoardFullException(Exception):
@@ -6,31 +6,6 @@ class BoardFullException(Exception):
 
 
 MAXIMUM_MOVES = 9
-
-
-class Board:
-    boundary = "\n"
-    y_dividers = "     |     |     \n"
-    xy_dividers = "-----|-----|-----\n"
-
-    def __init__(self):
-        self.board_rows = [
-            self.boundary,
-            self.y_dividers,
-            self.xy_dividers,
-            self.y_dividers,
-            self.xy_dividers,
-            self.y_dividers,
-            self.boundary,
-        ]
-
-    def _get_board_rows(self) -> List[str]:
-        return self.board_rows
-
-    def get_board(self) -> str:
-        board = "".join(self._get_board_rows())
-        return board
-
 
 
 class Game:
@@ -57,8 +32,3 @@ class Game:
 
     def count_moves(self) -> int:
         return len(self._get_moves())
-
-
-if __name__ == "__main__":
-    game = Game()
-    game.begin_game()
