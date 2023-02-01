@@ -2,6 +2,7 @@ from io import StringIO
 from unittest.mock import MagicMock
 import pytest
 
+from board import Board
 from src.game import Game, BoardFullException
 
 
@@ -61,3 +62,31 @@ def test_game_alternates_players(monkeypatch):
     assert expected_first_turn == actual_first_turn
     assert expected_second_turn == actual_second_turn
     assert expected_third_turn == actual_third_turn
+
+
+def test_game_identifies_win():
+
+    game = Game(MagicMock)
+    game.add_move(1) #X
+    game.add_move(9) #O
+    game.add_move(2) #X
+    game.add_move(8) #0
+
+    expected = {
+        "is_won": True,
+        "won_by": "X"
+    }
+    game.add_move(3) # winning move for X
+    actual = game._is_won()
+    assert expected == actual
+
+
+
+
+
+
+
+# there are various sequences that indicate a win
+# 123, 456, 789
+# 147, 258, 369
+# 159, 357
