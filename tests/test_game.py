@@ -24,3 +24,12 @@ def test_game_only_allows_nine_moves():
         game.add_move(10)
 
 
+def test_game_gets_and_saves_players_characters(monkeypatch):
+    first_player_choice = StringIO("O\n")
+    monkeypatch.setattr("sys.stdin", first_player_choice)
+    game = Game(MagicMock)
+    game.request_first_character()
+    expected = "X"
+    actual = game.get_first_character()
+
+
