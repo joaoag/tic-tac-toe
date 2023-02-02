@@ -58,10 +58,6 @@ class Game:
         if count == MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
-    # def _is_winning_sequence(self, sequence: tuple):
-    #     is_winning_sequence = all(entry == sequence[0] for entry in sequence)
-    #     return is_winning_sequence
-
     def _is_won(self) -> bool:
         for sequence in WINNING_SEQUENCES:
             cell_entries = self.board.get_cells(sequence)
