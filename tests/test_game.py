@@ -1,12 +1,13 @@
 from io import StringIO
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 import pytest
 
 from src.game import Game, BoardFullException
 
 
-def test_game_allows_no_more_than_nine_moves():
-    game = Game(MagicMock)
+@patch("src.board.Board")
+def test_game_allows_no_more_than_nine_moves(mock_board):
+    game = Game(mock_board)
 
     for n in range(1, 10):
         game.add_move(n)
@@ -17,20 +18,22 @@ def test_game_allows_no_more_than_nine_moves():
         game.add_move(4)
 
 
-def test_game_gets_and_saves_players_characters(monkeypatch):
+@patch("src.board.Board")
+def test_game_gets_and_saves_players_characters(mock_board, monkeypatch):
     first_player_choice = StringIO("O\n")
     monkeypatch.setattr("sys.stdin", first_player_choice)
-    game = Game(MagicMock)
+    game = Game(mock_board)
     game.request_first_character()
     expected_order = {1: "O", 2: "X"}
     actual_order = game._get_play_order()
     assert expected_order == actual_order
 
 
-def test_game_only_allows_player_to_choose_x_or_o(monkeypatch):
+@patch("src.board.Board")
+def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
     first_player_choice = StringIO("A\n")
     monkeypatch.setattr("sys.stdin", first_player_choice)
-    game = Game(MagicMock)
+    game = Game(mock_board)
 
     expected_state = {1: "", 2: ""}
     expected_message = "Sorry, that's not a valid character, you must pick X or O"
@@ -42,10 +45,11 @@ def test_game_only_allows_player_to_choose_x_or_o(monkeypatch):
     assert expected_message == actual_message
 
 
-def test_game_alternates_players(monkeypatch):
+@patch("src.board.Board")
+def test_game_alternates_players(mock_board, monkeypatch):
     players_input = StringIO("X\n9\n3\n")
     monkeypatch.setattr("sys.stdin", players_input)
-    game = Game(MagicMock)
+    game = Game(mock_board)
     game.request_first_character()  # player chooses X
 
     expected_first_turn = "X"
