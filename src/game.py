@@ -5,6 +5,7 @@ class BoardFullException(Exception):
     pass
 
 
+EARLIEST_WINNING_MOVE = 5
 MAXIMUM_MOVES = 9
 WINNING_SEQUENCES = [
     (1, 2, 3),
@@ -67,17 +68,19 @@ class Game:
 
     def add_move(self, position):
         self._is_space_on_board()
+
         self.moves.append(position)
         self.board.update_board(self._current_player, position)
-        if self._count_moves() > 4:
+        moves = self._count_moves()
+        if moves >= EARLIEST_WINNING_MOVE:
             if self._is_won():
                 return f"{self._winner} has won the game!"
 
-        post_turn_move_count = self._get_current_move()
-        self._switch_players(post_turn_move_count)
+        self._switch_players(moves)
 
     def _switch_players(self, current_move):
-        if current_move % 2 == 0:
+        end_of_first_player_turn = current_move % 2 != 0
+        if end_of_first_player_turn:
             self._set_current_player(self.play_order[2])
         else:
             self._set_current_player(self.play_order[1])
@@ -93,6 +96,3 @@ class Game:
 
     def _count_moves(self) -> int:
         return len(self._get_moves())
-
-    def _get_current_move(self) -> int:
-        return len(self._get_moves()) + 1
