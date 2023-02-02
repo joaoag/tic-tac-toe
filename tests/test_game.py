@@ -10,12 +10,12 @@ def test_game_allows_no_more_than_nine_moves(mock_board):
     game = Game(mock_board)
 
     for n in range(1, 10):
-        game.add_move(n)
+        game.move_and_switch_players(n)
 
     with pytest.raises(
         BoardFullException, match="Sorry, the board is full so the game is over"
     ):
-        game.add_move(4)
+        game.move_and_switch_players(4)
 
 
 @patch("src.board.Board")
@@ -77,8 +77,8 @@ def test_game_identifies_win(mock_board, monkeypatch):
     game = Game(mock_board)
     game.request_first_character()
     for move in x_o_moves_with_x_win:
-        game.add_move(move)
+        game.move_and_switch_players(move)
 
     expected = "X has won the game!"
-    actual = game.add_move(3)
+    actual = game.move_and_switch_players(3)
     assert expected == actual

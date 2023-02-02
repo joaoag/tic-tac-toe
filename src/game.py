@@ -29,7 +29,7 @@ class Game:
 
     def get_move(self):
         move = self.prompt()
-        self.add_move(move)
+        self.move_and_switch_players(move)
 
     def prompt(self) -> int:
         next_move = int(input("Please enter your move"))
@@ -60,23 +60,29 @@ class Game:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
     def _is_won(self) -> bool:
-        for sequence in WINNING_SEQUENCES:
-            cell_entries = self.board.get_cells(sequence)
-            if cell_entries == {"X"} or cell_entries == {"O"}:
-                self._winner = cell_entries.pop()
-                return True
+        return bool(self._winner)
 
-    def add_move(self, position):
+    def _check_for_winner(self, move_count):
+        if move_count >= EARLIEST_WINNING_MOVE:
+            for sequence in WINNING_SEQUENCES:
+                cell_entries = self.board.get_cells(sequence)
+                if cell_entries == {"X"} or cell_entries == {"O"}:
+                    self._winner = cell_entries.pop()
+
+    def _apply_move(self, position):
         self._is_space_on_board()
-
         self.moves.append(position)
         self.board.update_board(self._current_player, position)
-        moves = self._count_moves()
-        if moves >= EARLIEST_WINNING_MOVE:
-            if self._is_won():
-                return f"{self._winner} has won the game!"
 
-        self._switch_players(moves)
+    def move_and_switch_players(self, position):
+        self._apply_move(position)
+
+        move_count = self._count_moves()
+        self._check_for_winner(move_count)
+        if self._is_won():
+            return f"{self._winner} has won the game!"
+
+        self._switch_players(move_count)
 
     def _switch_players(self, current_move):
         end_of_first_player_turn = current_move % 2 != 0
