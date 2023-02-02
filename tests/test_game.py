@@ -10,12 +10,12 @@ def test_game_allows_no_more_than_nine_moves(mock_board):
     game = Game(mock_board)
 
     for n in range(1, 10):
-        game.move_and_switch_players(n)
+        game._move_and_switch_players(n)
 
     with pytest.raises(
         BoardFullException, match="Sorry, the board is full so the game is over"
     ):
-        game.move_and_switch_players(4)
+        game._move_and_switch_players(4)
 
 
 @patch("src.board.Board")
@@ -23,7 +23,7 @@ def test_game_gets_and_saves_players_characters(mock_board, monkeypatch):
     first_player_choice = StringIO("O\n")
     monkeypatch.setattr("sys.stdin", first_player_choice)
     game = Game(mock_board)
-    game.request_first_character()
+    game._request_first_character()
     expected_order = {1: "O", 2: "X"}
     actual_order = game._get_play_order()
     assert expected_order == actual_order
@@ -38,7 +38,7 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
     expected_state = {1: "", 2: ""}
     expected_return_value = False
 
-    actual_return_value = game.request_first_character()
+    actual_return_value = game._request_first_character()
     actual_state = game._get_play_order()
 
     assert expected_state == actual_state
@@ -50,16 +50,16 @@ def test_game_alternates_players(mock_board, monkeypatch):
     players_input = StringIO("X\n9\n3\n")
     monkeypatch.setattr("sys.stdin", players_input)
     game = Game(mock_board)
-    game.request_first_character()  # player chooses X
+    game._request_first_character()  # player chooses X
 
     expected_first_turn = "X"
     expected_second_turn = "O"
     expected_third_turn = "X"
 
     actual_first_turn = game._get_current_player()
-    game.get_move()
+    game._get_move()
     actual_second_turn = game._get_current_player()
-    game.get_move()
+    game._get_move()
     actual_third_turn = game._get_current_player()
 
     assert expected_first_turn == actual_first_turn
@@ -75,11 +75,11 @@ def test_game_identifies_win(mock_board, monkeypatch):
     x_o_moves_with_x_win = [1, 9, 2, 8]
 
     game = Game(mock_board)
-    game.request_first_character()
+    game._request_first_character()
     for move in x_o_moves_with_x_win:
-        game.move_and_switch_players(move)
+        game._move_and_switch_players(move)
 
     expected = "X"
-    game.move_and_switch_players(3)  # winning move for X
+    game._move_and_switch_players(3)  # winning move for X
     actual = game._get_winner()
     assert expected == actual
