@@ -36,13 +36,13 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
     game = Game(mock_board)
 
     expected_state = {1: "", 2: ""}
-    expected_message = "Sorry, that's not a valid character, you must pick X or O"
+    expected_return_value = False
 
-    actual_message = game.request_first_character()
+    actual_return_value = game.request_first_character()
     actual_state = game._get_play_order()
 
     assert expected_state == actual_state
-    assert expected_message == actual_message
+    assert expected_return_value == actual_return_value
 
 
 @patch("src.board.Board")
@@ -53,7 +53,7 @@ def test_game_alternates_players(mock_board, monkeypatch):
     game.request_first_character()  # player chooses X
 
     expected_first_turn = "X"
-    expected_second_turn = "0"
+    expected_second_turn = "O"
     expected_third_turn = "X"
 
     actual_first_turn = game._get_current_player()
@@ -79,6 +79,7 @@ def test_game_identifies_win(mock_board, monkeypatch):
     for move in x_o_moves_with_x_win:
         game.move_and_switch_players(move)
 
-    expected = "X has won the game!"
-    actual = game.move_and_switch_players(3)
+    expected = "X"
+    game.move_and_switch_players(3)  # winning move for X
+    actual = game._get_winner()
     assert expected == actual

@@ -1,22 +1,23 @@
-from board import Board
+from src.board import Board
+from src.dialogue import (
+    get_character,
+    get_next_move,
+    announce_winner,
+    announce_character_selection,
+    announce_invalid_character_selection,
+)
+from src.constants import (
+    EARLIEST_WINNING_MOVE,
+    MAXIMUM_MOVES,
+    WINNING_SEQUENCES,
+    VALID_CHARACTERS,
+    NOUGHT,
+    CROSS,
+)
 
 
 class BoardFullException(Exception):
     pass
-
-
-EARLIEST_WINNING_MOVE = 5
-MAXIMUM_MOVES = 9
-WINNING_SEQUENCES = [
-    (1, 2, 3),
-    (4, 5, 6),
-    (7, 8, 9),
-    (1, 4, 7),
-    (2, 5, 8),
-    (3, 6, 9),
-    (1, 5, 9),
-    (3, 5, 7),
-]
 
 
 class Game:
@@ -28,24 +29,42 @@ class Game:
         self._winner = ""
 
     def get_move(self):
-        move = self.prompt()
+        move = get_next_move(self._current_player)
         self.move_and_switch_players(move)
 
-    def prompt(self) -> int:
-        next_move = int(input("Please enter your move"))
-        return next_move
+    def move_selection(self):
+        is_being_played = True
+        while is_being_played:
+            self.get_move()
+            print(self.board.get_board())
+            if self._winner:
+                announce_winner(self._winner)
+                is_being_played = False
 
-    def request_first_character(self) -> str | None:
-        first_character = input("Please enter player one's character: X or O")
-        first_character = first_character.strip().upper()
-        if first_character not in ["X", "O"]:
-            return "Sorry, that's not a valid character, you must pick X or O"
+    def character_selection(self):
+        while not self.request_first_character():
+            self.request_first_character()
 
+    def _implement_play_order(self, first_character: str):
         self._set_play_order(first_character)
         self._set_current_player(first_character)
+        announce_character_selection(
+            first_player=self.play_order[1], second_player=self.play_order[2]
+        )
+
+    def request_first_character(self) -> bool:
+        first_character = get_character()
+        is_valid_selection = first_character in VALID_CHARACTERS
+
+        if is_valid_selection:
+            self._implement_play_order(first_character)
+            return is_valid_selection
+        else:
+            announce_invalid_character_selection(first_character)
+            return is_valid_selection
 
     def _set_play_order(self, first_character):
-        second_character = "0" if first_character == "X" else "X"
+        second_character = NOUGHT if first_character == CROSS else CROSS
         self.play_order = {1: first_character, 2: second_character}
 
     def _get_play_order(self) -> dict:
@@ -59,15 +78,22 @@ class Game:
         if count == MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
+    def _get_winner(self) -> str | None:
+        return self._winner
+
+    def _set_winner(self, winner):
+        self._winner = winner
+
     def _is_won(self) -> bool:
-        return bool(self._winner)
+        return bool(self._get_winner())
 
     def _check_for_winner(self, move_count):
         if move_count >= EARLIEST_WINNING_MOVE:
             for sequence in WINNING_SEQUENCES:
                 cell_entries = self.board.get_cells(sequence)
-                if cell_entries == {"X"} or cell_entries == {"O"}:
-                    self._winner = cell_entries.pop()
+                if cell_entries == {CROSS} or cell_entries == {NOUGHT}:
+                    winner = cell_entries.pop()
+                    self._set_winner(winner)
 
     def _apply_move(self, position):
         self._is_space_on_board()
@@ -80,7 +106,7 @@ class Game:
         move_count = self._count_moves()
         self._check_for_winner(move_count)
         if self._is_won():
-            return f"{self._winner} has won the game!"
+            return
 
         self._switch_players(move_count)
 
