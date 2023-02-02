@@ -26,3 +26,7 @@ class Board:
   {self.cells[7]}  |  {self.cells[8]}  |  {self.cells[9]}  
 """
         return board
+
+    def get_cells(self, cells: tuple) -> set:
+        first, second, third = cells
+        return {self.cells[first], self.cells[second], self.cells[third]}

@@ -6,6 +6,16 @@ class BoardFullException(Exception):
 
 
 MAXIMUM_MOVES = 9
+WINNING_SEQUENCES = [
+    (1, 2, 3),
+    (4, 5, 6),
+    (7, 8, 9),
+    (1, 4, 7),
+    (2, 5, 8),
+    (3, 6, 9),
+    (1, 5, 9),
+    (3, 5, 7),
+]
 
 
 class Game:
@@ -14,6 +24,7 @@ class Game:
         self.board = board
         self.play_order = {1: "", 2: ""}
         self._current_player = ""
+        self._winner = ""
 
     def get_move(self):
         move = self.prompt()
@@ -47,10 +58,24 @@ class Game:
         if count == MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
+    # def _is_winning_sequence(self, sequence: tuple):
+    #     is_winning_sequence = all(entry == sequence[0] for entry in sequence)
+    #     return is_winning_sequence
+
+    def _is_won(self) -> bool:
+        for sequence in WINNING_SEQUENCES:
+            cell_entries = self.board.get_cells(sequence)
+            if cell_entries == {"X"} or cell_entries == {"O"}:
+                self._winner = cell_entries.pop()
+                return True
+
     def add_move(self, position):
         self._is_space_on_board()
-
         self.moves.append(position)
+        self.board.update_board(self._current_player, position)
+
+        if self._is_won():
+            return f"{self._winner} has won the game!"
 
         post_turn_move_count = self._get_current_move()
         self._switch_players(post_turn_move_count)

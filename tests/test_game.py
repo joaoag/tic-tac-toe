@@ -33,7 +33,7 @@ def test_game_only_allows_player_to_choose_x_or_o(monkeypatch):
     monkeypatch.setattr("sys.stdin", first_player_choice)
     game = Game(MagicMock)
 
-    expected_state = {1: '', 2: ''}
+    expected_state = {1: "", 2: ""}
     expected_message = "Sorry, that's not a valid character, you must pick X or O"
 
     actual_message = game.request_first_character()
@@ -64,29 +64,17 @@ def test_game_alternates_players(monkeypatch):
     assert expected_third_turn == actual_third_turn
 
 
-def test_game_identifies_win():
+def test_game_identifies_win(monkeypatch):
+    players_input = StringIO("X")
+    monkeypatch.setattr("sys.stdin", players_input)
+    board = Board()
+    game = Game(board)
+    game.request_first_character()
+    game.add_move(1)  # X
+    game.add_move(9)  # O
+    game.add_move(2)  # X
+    game.add_move(8)  # 0
 
-    game = Game(MagicMock)
-    game.add_move(1) #X
-    game.add_move(9) #O
-    game.add_move(2) #X
-    game.add_move(8) #0
-
-    expected = {
-        "is_won": True,
-        "won_by": "X"
-    }
-    game.add_move(3) # winning move for X
-    actual = game._is_won()
+    expected = "X has won the game!"
+    actual = game.add_move(3)
     assert expected == actual
-
-
-
-
-
-
-
-# there are various sequences that indicate a win
-# 123, 456, 789
-# 147, 258, 369
-# 159, 357
