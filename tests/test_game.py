@@ -1,8 +1,7 @@
 from io import StringIO
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import pytest
 
-from board import Board
 from src.game import Game, BoardFullException
 
 
@@ -64,16 +63,17 @@ def test_game_alternates_players(monkeypatch):
     assert expected_third_turn == actual_third_turn
 
 
-def test_game_identifies_win(monkeypatch):
+@patch("src.board.Board")
+def test_game_identifies_win(mock_board, monkeypatch):
+    mock_board.get_cells.return_value = {"X"}
     players_input = StringIO("X")
     monkeypatch.setattr("sys.stdin", players_input)
-    board = Board()
-    game = Game(board)
+    x_o_moves_with_x_win = [1, 9, 2, 8]
+
+    game = Game(mock_board)
     game.request_first_character()
-    game.add_move(1)  # X
-    game.add_move(9)  # O
-    game.add_move(2)  # X
-    game.add_move(8)  # 0
+    for move in x_o_moves_with_x_win:
+        game.add_move(move)
 
     expected = "X has won the game!"
     actual = game.add_move(3)

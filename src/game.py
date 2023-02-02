@@ -73,9 +73,9 @@ class Game:
         self._is_space_on_board()
         self.moves.append(position)
         self.board.update_board(self._current_player, position)
-
-        if self._is_won():
-            return f"{self._winner} has won the game!"
+        if self._count_moves() > 4:
+            if self._is_won():
+                return f"{self._winner} has won the game!"
 
         post_turn_move_count = self._get_current_move()
         self._switch_players(post_turn_move_count)
