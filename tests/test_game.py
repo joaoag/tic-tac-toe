@@ -83,3 +83,11 @@ def test_game_identifies_win(mock_board, monkeypatch):
     game._move_and_switch_players(3)  # winning move for X
     actual = game._get_winner()
     assert expected == actual
+
+
+@patch("src.board.Board")
+def test_game_validates_move_input(mock_board):
+    expected = False
+    game = Game(mock_board)
+    actual = game._is_valid_move(22)
+    assert expected == actual
