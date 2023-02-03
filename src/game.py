@@ -14,7 +14,7 @@ from src.constants import (
     VALID_CHARACTERS,
     NOUGHT,
     CROSS,
-    VALID_CELLS,
+    ALL_CELLS,
 )
 
 
@@ -24,22 +24,36 @@ class BoardFullException(Exception):
 
 class Game:
     def __init__(self, board: Board):
-        self._moves = []
+        self._taken_moves = set()
         self._board = board
         self._play_order = {1: "", 2: ""}
         self._current_player = ""
         self._winner = ""
 
-    def _is_valid_cell(self, move) -> bool:
-        if move.isdigit() and move in VALID_CELLS:
-            return True
+    def _get_remaining_moves(self, all_moves: set = ALL_CELLS) -> set:
+        remaining_moves = all_moves - self._taken_moves
+        return remaining_moves
+
+    def _is_available_cell(self, move) -> bool:
+        remaining_moves = self._get_remaining_moves()
+        is_available = move in remaining_moves
+        return is_available
+
+    def _is_valid_cell(self, move: str) -> bool:
+        is_valid_cell = move.isdigit() and move in ALL_CELLS
+        if is_valid_cell:
+            return is_valid_cell
         else:
             announce_invalid_move_selection(move)
-            return False
+            return is_valid_cell
+
+    def _is_move_playable(self, move: str) -> bool:
+        is_playable = self._is_valid_cell(move) and self._is_available_cell(move)
+        return is_playable
 
     def _get_move(self):
         move = get_next_move(self._current_player)
-        if self._is_valid_cell(move):
+        if self._is_move_playable(move):
             self._move_and_switch_players(int(move))
 
     def move_selection(self):
@@ -107,7 +121,7 @@ class Game:
 
     def _apply_move(self, position: int):
         self._is_space_on_board()
-        self._moves.append(position)
+        self._taken_moves.add(position)
         self._board.update_board(self._current_player, position)
 
     def _move_and_switch_players(self, position: int):
@@ -134,7 +148,7 @@ class Game:
         return self._current_player
 
     def _get_moves(self) -> list:
-        return self._moves
+        return self._taken_moves
 
     def _count_moves(self) -> int:
         return len(self._get_moves())
