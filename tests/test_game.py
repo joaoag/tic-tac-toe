@@ -101,3 +101,18 @@ def test_game_rejects_invalid_cells(mock_board, invalid_input):
     game = Game(mock_board)
     actual = game._is_valid_cell(invalid_input)
     assert expected == actual
+
+
+@patch("src.board.Board")
+def test_game_rejects_moves_onto_populated_cells(mock_board, monkeypatch):
+    players_input = StringIO("X")
+    monkeypatch.setattr("sys.stdin", players_input)
+    first_player_first_move = 1
+    game = Game(mock_board)
+
+    game._request_first_character()
+    game._move_and_switch_players(first_player_first_move)
+
+    expected = False
+    actual = game._is_available_cell(first_player_first_move)
+    assert expected == actual
