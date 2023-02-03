@@ -85,9 +85,19 @@ def test_game_identifies_win(mock_board, monkeypatch):
     assert expected == actual
 
 
+@pytest.mark.parametrize("valid_input", ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 @patch("src.board.Board")
-def test_game_validates_move_input(mock_board):
+def test_game_accepts_valid_cells(mock_board, valid_input):
+    expected = True
+    game = Game(mock_board)
+    actual = game._is_valid_cell(valid_input)
+    assert expected == actual
+
+
+@pytest.mark.parametrize("invalid_input", ["A", "?", "22", "four", "O", "", "-", "0"])
+@patch("src.board.Board")
+def test_game_rejects_invalid_cells(mock_board, invalid_input):
     expected = False
     game = Game(mock_board)
-    actual = game._is_valid_move(22)
+    actual = game._is_valid_cell(invalid_input)
     assert expected == actual

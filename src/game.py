@@ -5,6 +5,7 @@ from src.dialogue import (
     announce_winner,
     announce_character_selection,
     announce_invalid_character_selection,
+    announce_invalid_move_selection,
 )
 from src.constants import (
     EARLIEST_WINNING_MOVE,
@@ -13,6 +14,7 @@ from src.constants import (
     VALID_CHARACTERS,
     NOUGHT,
     CROSS,
+    VALID_CELLS,
 )
 
 
@@ -28,9 +30,17 @@ class Game:
         self._current_player = ""
         self._winner = ""
 
+    def _is_valid_cell(self, move) -> bool:
+        if move.isdigit() and move in VALID_CELLS:
+            return True
+        else:
+            announce_invalid_move_selection(move)
+            return False
+
     def _get_move(self):
         move = get_next_move(self._current_player)
-        self._move_and_switch_players(move)
+        if self._is_valid_cell(move):
+            self._move_and_switch_players(int(move))
 
     def move_selection(self):
         is_being_played = True
@@ -63,7 +73,7 @@ class Game:
             announce_invalid_character_selection(first_character)
             return is_valid_selection
 
-    def _set_play_order(self, first_character):
+    def _set_play_order(self, first_character: str):
         second_character = NOUGHT if first_character == CROSS else CROSS
         self._play_order = {1: first_character, 2: second_character}
 
@@ -81,13 +91,13 @@ class Game:
     def _get_winner(self) -> str | None:
         return self._winner
 
-    def _set_winner(self, winner):
+    def _set_winner(self, winner: str):
         self._winner = winner
 
     def _is_won(self) -> bool:
         return bool(self._get_winner())
 
-    def _check_for_winner(self, move_count):
+    def _check_for_winner(self, move_count: int):
         if move_count >= EARLIEST_WINNING_MOVE:
             for sequence in WINNING_SEQUENCES:
                 cell_entries = self._board.get_cells(sequence)
@@ -95,12 +105,12 @@ class Game:
                     winner = cell_entries.pop()
                     self._set_winner(winner)
 
-    def _apply_move(self, position):
+    def _apply_move(self, position: int):
         self._is_space_on_board()
         self._moves.append(position)
         self._board.update_board(self._current_player, position)
 
-    def _move_and_switch_players(self, position):
+    def _move_and_switch_players(self, position: int):
         self._apply_move(position)
 
         move_count = self._count_moves()
@@ -110,7 +120,7 @@ class Game:
 
         self._switch_players(move_count)
 
-    def _switch_players(self, current_move):
+    def _switch_players(self, current_move: int):
         end_of_first_player_turn = current_move % 2 != 0
         if end_of_first_player_turn:
             self._set_current_player(self._play_order[2])

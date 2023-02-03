@@ -1,5 +1,5 @@
-def get_next_move(current_player) -> int:
-    next_move = int(input(f"{current_player}, please enter your move\n"))
+def get_next_move(current_player) -> str:
+    next_move = input(f"{current_player}, please enter your move\n")
     return next_move
 
 
@@ -20,3 +20,9 @@ def announce_character_selection(first_player, second_player):
 
 def announce_winner(winner):
     print(f"{winner} has won the game!")
+
+
+def announce_invalid_move_selection(invalid_selection):
+    print(
+        f"Your move needs to be a number from 1-9, e.g. '5' but you selected '{invalid_selection}'"
+    )

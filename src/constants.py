@@ -13,3 +13,4 @@ WINNING_SEQUENCES = [
 CROSS = "X"
 NOUGHT = "O"
 VALID_CHARACTERS = {CROSS, NOUGHT}
+VALID_CELLS = {"1", "2", "3", "4", "5", "6", "7", "8", "9"}
