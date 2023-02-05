@@ -8,15 +8,7 @@ from src.dialogue import (
     announce_invalid_move_selection,
     announce_draw,
 )
-from src.constants import (
-    EARLIEST_WINNING_MOVE,
-    MAXIMUM_MOVES,
-    WINNING_SEQUENCES,
-    VALID_CHARACTERS,
-    NOUGHT,
-    CROSS,
-    ALL_CELLS,
-)
+from src.constants import GameConstants
 
 
 class BoardFullException(Exception):
@@ -32,7 +24,7 @@ class Game:
         self._winner = None
         self._draw = False
 
-    def _get_remaining_moves(self, all_moves: set[str] = ALL_CELLS) -> set:
+    def _get_remaining_moves(self, all_moves: set[str] = GameConstants.ALL_CELLS) -> set:
         remaining_moves = all_moves - self._taken_moves
         return remaining_moves
 
@@ -42,7 +34,7 @@ class Game:
         return is_available
 
     def _is_valid_cell(self, move: str) -> bool:
-        is_valid_cell = move.isdigit() and move in ALL_CELLS
+        is_valid_cell = move.isdigit() and move in GameConstants.ALL_CELLS
         if is_valid_cell:
             return is_valid_cell
         else:
@@ -83,7 +75,7 @@ class Game:
 
     def _request_first_character(self) -> bool:
         first_character = get_character()
-        is_valid_selection = first_character in VALID_CHARACTERS
+        is_valid_selection = first_character in GameConstants.VALID_CHARACTERS
 
         if is_valid_selection:
             self._implement_play_order(first_character)
@@ -93,7 +85,7 @@ class Game:
             return is_valid_selection
 
     def _set_play_order(self, first_character: str):
-        second_character = NOUGHT if first_character == CROSS else CROSS
+        second_character = GameConstants.NOUGHT if first_character == GameConstants.CROSS else GameConstants.CROSS
         self._play_order = {1: first_character, 2: second_character}
 
     def _get_play_order(self) -> dict:
@@ -104,7 +96,7 @@ class Game:
         self._validate_count(moves_so_far)
 
     def _validate_count(self, count: int):
-        if count == MAXIMUM_MOVES:
+        if count == GameConstants.MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
     def _get_winner(self) -> str | None:
@@ -120,13 +112,13 @@ class Game:
         return self._draw
 
     def _cells_contain_win(self, cell_entries: set[str]) -> bool:
-        winning_sequence_for_x = cell_entries == {CROSS}
-        winning_sequence_for_o = cell_entries == {NOUGHT}
+        winning_sequence_for_x = cell_entries == {GameConstants.CROSS}
+        winning_sequence_for_o = cell_entries == {GameConstants.NOUGHT}
         return winning_sequence_for_x or winning_sequence_for_o
 
     def _check_for_winner(self, move_count: int):
-        if move_count >= EARLIEST_WINNING_MOVE:
-            for sequence in WINNING_SEQUENCES:
+        if move_count >= GameConstants.EARLIEST_WINNING_MOVE:
+            for sequence in GameConstants.WINNING_SEQUENCES:
                 cell_entries = self._board.get_cells(sequence)
                 if self._cells_contain_win(cell_entries):
                     winner = cell_entries.pop()
@@ -145,7 +137,7 @@ class Game:
         if self._is_won():
             return # TODO do we need this early return? Could we bundle two into check_win_or_draw()
 
-        if self._count_moves() >= MAXIMUM_MOVES and not self._is_won():
+        if self._count_moves() >= GameConstants.MAXIMUM_MOVES and not self._is_won():
             self._set_is_draw(True)
 
         self._switch_players(move_count)
