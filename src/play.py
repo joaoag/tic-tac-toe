@@ -13,12 +13,12 @@ class Play:
     def get_player_moves(self):
         is_being_played = True
         while is_being_played:
-            self.game._get_move()
-            print(self.game._board.get_board())
-            if self.game._is_won():
-                announce_winner(self.game._get_winner())
+            self.game.get_move() #should a game get a move?...
+            print(self.game.get_board())
+            if self.game.is_won():
+                announce_winner(self.game.get_winner())
                 is_being_played = False
-            if self.game._is_draw():
+            if self.game.is_draw():
                 announce_draw()
                 is_being_played = False
 

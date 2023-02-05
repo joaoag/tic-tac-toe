@@ -57,9 +57,9 @@ def test_game_alternates_players(mock_board, monkeypatch):
     expected_third_turn = "X"
 
     actual_first_turn = game._get_current_player()
-    game._get_move()
+    game.get_move()
     actual_second_turn = game._get_current_player()
-    game._get_move()
+    game.get_move()
     actual_third_turn = game._get_current_player()
 
     assert expected_first_turn == actual_first_turn
@@ -81,7 +81,7 @@ def test_game_identifies_win(mock_board, monkeypatch):
 
     expected = "X"
     game._move_and_switch_players(3)  # winning move for X
-    actual = game._get_winner()
+    actual = game.get_winner()
     assert expected == actual
 
 
@@ -97,7 +97,7 @@ def test_game_identifies_draw(mock_board, monkeypatch):
         game._move_and_switch_players(move)
 
     expected = True
-    actual = game._is_draw()
+    actual = game.is_draw()
 
     assert expected == actual
 

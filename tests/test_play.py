@@ -18,5 +18,5 @@ def test_play_allows_game_to_be_won(monkeypatch):
     play.play()
 
     expected_winner = "X"
-    actual_winner = play.game._get_winner()
+    actual_winner = play.game.get_winner()
     assert expected_winner == actual_winner

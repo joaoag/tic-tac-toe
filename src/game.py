@@ -45,7 +45,10 @@ class Game:
         is_playable = self._is_valid_cell(move) and self._is_available_cell(move)
         return is_playable
 
-    def _get_move(self):
+    def get_board(self):
+        return self._board.get_board()
+
+    def get_move(self):
         move = get_next_move(self._current_player)
         if self._is_move_playable(move):
             self._move_and_switch_players(int(move))
@@ -87,16 +90,16 @@ class Game:
         if count == GameConstants.MAXIMUM_MOVES:
             raise BoardFullException("Sorry, the board is full so the game is over")
 
-    def _get_winner(self) -> str | None:
+    def get_winner(self) -> str | None:
         return self._winner
 
     def _set_winner(self, winner: str):
         self._winner = winner
 
-    def _is_won(self) -> bool:
-        return bool(self._get_winner())
+    def is_won(self) -> bool:
+        return bool(self.get_winner())
 
-    def _is_draw(self) -> bool:
+    def is_draw(self) -> bool:
         return self._draw
 
     def _cells_contain_win(self, cell_entries: set[str]) -> bool:
@@ -122,10 +125,10 @@ class Game:
 
         move_count = self._count_moves()
         self._check_for_winner(move_count)
-        if self._is_won():
+        if self.is_won():
             return  # TODO do we need this early return? Could we bundle two into check_win_or_draw()
 
-        if self._count_moves() >= GameConstants.MAXIMUM_MOVES and not self._is_won():
+        if self._count_moves() >= GameConstants.MAXIMUM_MOVES and not self.is_won():
             self._set_is_draw(True)
 
         self._switch_players(move_count)
