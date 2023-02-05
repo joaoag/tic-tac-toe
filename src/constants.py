@@ -18,4 +18,5 @@ class GameConstants:
     CROSS = "X"
     NOUGHT = "O"
     VALID_CHARACTERS = {CROSS, NOUGHT}
-    ALL_CELLS = {"1", "2", "3", "4", "5", "6", "7", "8", "9"}
+    ALL_MOVES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"}
+    ALL_CELLS = {1, 2, 3, 4, 5, 6, 7, 8, 9}

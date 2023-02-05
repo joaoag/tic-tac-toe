@@ -5,6 +5,7 @@ from src.dialogue import (
     announce_character_selection,
     announce_invalid_character_selection,
     announce_invalid_move_selection,
+    announce_unavailable_move,
 )
 from src.constants import GameConstants
 
@@ -21,37 +22,50 @@ class Game:
         self._current_player = ""
         self._winner = None
         self._draw = False
+        self._characters_selected = False
 
     def _get_remaining_moves(
-        self, all_moves: set[str] = GameConstants.ALL_CELLS
+        self, all_cells: set[int] = GameConstants.ALL_CELLS
     ) -> set:
-        remaining_moves = all_moves - self._taken_moves
+        remaining_moves = all_cells - self._taken_moves
         return remaining_moves
 
-    def _is_available_cell(self, move) -> bool:
-        remaining_moves = self._get_remaining_moves()
-        is_available = move in remaining_moves
+    def _is_available_cell(self, move: int) -> bool:
+        is_first_move = self._get_moves() == set()
+        if is_first_move:
+            return is_first_move
+
+        available_moves = self._get_remaining_moves()
+        is_available = move in available_moves
         return is_available
 
-    def _is_valid_cell(self, move: str) -> bool:
-        is_valid_cell = move.isdigit() and move in GameConstants.ALL_CELLS
-        if is_valid_cell:
-            return is_valid_cell
-        else:
-            announce_invalid_move_selection(move)
-            return is_valid_cell
+    def _is_valid_cell(self, move: int) -> bool:
+        return move in GameConstants.ALL_CELLS
 
-    def _is_valid_move(self, move: str) -> bool:
-        is_valid_move = self._is_valid_cell(move) and self._is_available_cell(move)
-        return is_valid_move
+    def _is_valid_type(self, move: str) -> bool:
+        return move.isdigit()
+
+    def _is_valid_move(self, move: int) -> bool:
+        is_in_range = self._is_valid_cell(move)
+        is_available = self._is_available_cell(move)
+        return is_in_range and is_available
 
     def get_board(self):
         return self._board.get_board()
 
-    def get_move(self):
+    def handle_move(self):
         move = get_next_move(self._current_player)
-        if self._is_valid_move(move):
-            self._move_and_switch_players(int(move))
+        if not self._is_valid_type(move):
+            announce_invalid_move_selection(move)
+            return
+
+        processed_move = int(move)
+        if not self._is_valid_move(processed_move):
+            announce_unavailable_move(processed_move)
+            return
+
+        self._move_and_switch_players(processed_move)
+
 
     def _implement_play_order(self, first_character: str):
         self._set_play_order(first_character)
@@ -66,6 +80,7 @@ class Game:
 
         if is_valid_selection:
             self._implement_play_order(first_character)
+            self._characters_selected = True
             return is_valid_selection
         else:
             announce_invalid_character_selection(first_character)
@@ -130,6 +145,7 @@ class Game:
 
         if self._count_moves() >= GameConstants.MAXIMUM_MOVES and not self.is_won():
             self._set_is_draw(True)
+            return
 
         self._switch_players(move_count)
 

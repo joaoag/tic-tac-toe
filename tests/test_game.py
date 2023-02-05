@@ -57,9 +57,9 @@ def test_game_alternates_players(mock_board, monkeypatch):
     expected_third_turn = "X"
 
     actual_first_turn = game._get_current_player()
-    game.get_move()
+    game.handle_move()
     actual_second_turn = game._get_current_player()
-    game.get_move()
+    game.handle_move()
     actual_third_turn = game._get_current_player()
 
     assert expected_first_turn == actual_first_turn
@@ -102,7 +102,7 @@ def test_game_identifies_draw(mock_board, monkeypatch):
     assert expected == actual
 
 
-@pytest.mark.parametrize("valid_input", ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
+@pytest.mark.parametrize("valid_input", [1, 2, 3, 4, 5, 6, 7, 8, 9])
 @patch("src.board.Board")
 def test_game_accepts_valid_cells(mock_board, valid_input):
     expected = True

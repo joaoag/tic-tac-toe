@@ -16,12 +16,14 @@ class Play:
         self.is_playing = False
 
     def get_player_characters(self):
-        while not self.game.request_first_character():
+        characters_selected = False
+        while not characters_selected:
             self.game.request_first_character()
+            characters_selected = self.game._characters_selected
 
     def get_player_moves(self):
         while self.is_playing:
-            self.game.get_move() #should a game get a move?...
+            self.game.handle_move()  # should a game get a move?...
             print(self.game.get_board())
             if self.game.is_won():
                 self.win(announce_winner)
