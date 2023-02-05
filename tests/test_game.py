@@ -84,6 +84,22 @@ def test_game_identifies_win(mock_board, monkeypatch):
     actual = game._get_winner()
     assert expected == actual
 
+@patch("src.board.Board")
+def test_game_identifies_draw(mock_board, monkeypatch):
+    players_input = StringIO("X")
+    monkeypatch.setattr("sys.stdin", players_input)
+    x_o_moves_with_draw = [1, 2, 3, 4, 6, 5, 7, 9, 8]
+
+    game = Game(mock_board)
+    game._request_first_character()
+    for move in x_o_moves_with_draw:
+        game._move_and_switch_players(move)
+
+    expected = True
+    actual = game._is_draw()
+
+    assert expected == actual
+
 
 @pytest.mark.parametrize("valid_input", ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 @patch("src.board.Board")

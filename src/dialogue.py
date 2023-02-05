@@ -22,6 +22,10 @@ def announce_winner(winner):
     print(f"{winner} has won the game!")
 
 
+def announce_draw():
+    print("It's a draw!")
+
+
 def announce_invalid_move_selection(invalid_selection):
     print(
         f"Your move needs to be a number from 1-9, e.g. '5' but you selected '{invalid_selection}'"
