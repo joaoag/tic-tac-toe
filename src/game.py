@@ -24,7 +24,9 @@ class Game:
         self._winner = None
         self._draw = False
 
-    def _get_remaining_moves(self, all_moves: set[str] = GameConstants.ALL_CELLS) -> set:
+    def _get_remaining_moves(
+        self, all_moves: set[str] = GameConstants.ALL_CELLS
+    ) -> set:
         remaining_moves = all_moves - self._taken_moves
         return remaining_moves
 
@@ -85,7 +87,11 @@ class Game:
             return is_valid_selection
 
     def _set_play_order(self, first_character: str):
-        second_character = GameConstants.NOUGHT if first_character == GameConstants.CROSS else GameConstants.CROSS
+        second_character = (
+            GameConstants.NOUGHT
+            if first_character == GameConstants.CROSS
+            else GameConstants.CROSS
+        )
         self._play_order = {1: first_character, 2: second_character}
 
     def _get_play_order(self) -> dict:
@@ -125,7 +131,7 @@ class Game:
                     self._set_winner(winner)
 
     def _apply_move(self, position: int):
-        self._is_space_on_board() # TODO unsure if this is needed any more
+        self._is_space_on_board()  # TODO unsure if this is needed any more
         self._taken_moves.add(position)
         self._board.update_board(self._current_player, position)
 
@@ -135,7 +141,7 @@ class Game:
         move_count = self._count_moves()
         self._check_for_winner(move_count)
         if self._is_won():
-            return # TODO do we need this early return? Could we bundle two into check_win_or_draw()
+            return  # TODO do we need this early return? Could we bundle two into check_win_or_draw()
 
         if self._count_moves() >= GameConstants.MAXIMUM_MOVES and not self._is_won():
             self._set_is_draw(True)

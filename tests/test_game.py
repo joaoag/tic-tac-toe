@@ -84,6 +84,7 @@ def test_game_identifies_win(mock_board, monkeypatch):
     actual = game._get_winner()
     assert expected == actual
 
+
 @patch("src.board.Board")
 def test_game_identifies_draw(mock_board, monkeypatch):
     players_input = StringIO("X")
