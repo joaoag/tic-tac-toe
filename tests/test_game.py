@@ -23,7 +23,7 @@ def test_game_gets_and_saves_players_characters(mock_board, monkeypatch):
     first_player_choice = StringIO("O\n")
     monkeypatch.setattr("sys.stdin", first_player_choice)
     game = Game(mock_board)
-    game._request_first_character()
+    game.request_first_character()
     expected_order = {1: "O", 2: "X"}
     actual_order = game._get_play_order()
     assert expected_order == actual_order
@@ -38,7 +38,7 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
     expected_state = {1: "", 2: ""}
     expected_return_value = False
 
-    actual_return_value = game._request_first_character()
+    actual_return_value = game.request_first_character()
     actual_state = game._get_play_order()
 
     assert expected_state == actual_state
@@ -50,7 +50,7 @@ def test_game_alternates_players(mock_board, monkeypatch):
     players_input = StringIO("X\n9\n3\n")
     monkeypatch.setattr("sys.stdin", players_input)
     game = Game(mock_board)
-    game._request_first_character()  # player chooses X
+    game.request_first_character()  # player chooses X
 
     expected_first_turn = "X"
     expected_second_turn = "O"
@@ -75,7 +75,7 @@ def test_game_identifies_win(mock_board, monkeypatch):
     x_o_moves_with_x_win = [1, 9, 2, 8]
 
     game = Game(mock_board)
-    game._request_first_character()
+    game.request_first_character()
     for move in x_o_moves_with_x_win:
         game._move_and_switch_players(move)
 
@@ -92,7 +92,7 @@ def test_game_identifies_draw(mock_board, monkeypatch):
     x_o_moves_with_draw = [1, 2, 3, 4, 6, 5, 7, 9, 8]
 
     game = Game(mock_board)
-    game._request_first_character()
+    game.request_first_character()
     for move in x_o_moves_with_draw:
         game._move_and_switch_players(move)
 
@@ -127,7 +127,7 @@ def test_game_rejects_moves_onto_populated_cells(mock_board, monkeypatch):
     first_player_first_move = 1
     game = Game(mock_board)
 
-    game._request_first_character()
+    game.request_first_character()
     game._move_and_switch_players(first_player_first_move)
 
     expected = False

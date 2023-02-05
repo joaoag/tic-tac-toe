@@ -2,11 +2,9 @@ from src.board import Board
 from src.dialogue import (
     get_character,
     get_next_move,
-    announce_winner,
     announce_character_selection,
     announce_invalid_character_selection,
     announce_invalid_move_selection,
-    announce_draw,
 )
 from src.constants import GameConstants
 
@@ -52,22 +50,6 @@ class Game:
         if self._is_move_playable(move):
             self._move_and_switch_players(int(move))
 
-    def move_selection(self):
-        is_being_played = True
-        while is_being_played:
-            self._get_move()
-            print(self._board.get_board())
-            if self._is_won():
-                announce_winner(self._winner)
-                is_being_played = False
-            if self._is_draw():
-                announce_draw()
-                is_being_played = False
-
-    def character_selection(self):
-        while not self._request_first_character():
-            self._request_first_character()
-
     def _implement_play_order(self, first_character: str):
         self._set_play_order(first_character)
         self._set_current_player(first_character)
@@ -75,7 +57,7 @@ class Game:
             first_player=self._play_order[1], second_player=self._play_order[2]
         )
 
-    def _request_first_character(self) -> bool:
+    def request_first_character(self) -> bool:
         first_character = get_character()
         is_valid_selection = first_character in GameConstants.VALID_CHARACTERS
 
