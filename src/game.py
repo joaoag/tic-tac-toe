@@ -41,16 +41,16 @@ class Game:
             announce_invalid_move_selection(move)
             return is_valid_cell
 
-    def _is_move_playable(self, move: str) -> bool:
-        is_playable = self._is_valid_cell(move) and self._is_available_cell(move)
-        return is_playable
+    def _is_valid_move(self, move: str) -> bool:
+        is_valid_move = self._is_valid_cell(move) and self._is_available_cell(move)
+        return is_valid_move
 
     def get_board(self):
         return self._board.get_board()
 
     def get_move(self):
         move = get_next_move(self._current_player)
-        if self._is_move_playable(move):
+        if self._is_valid_move(move):
             self._move_and_switch_players(int(move))
 
     def _implement_play_order(self, first_character: str):

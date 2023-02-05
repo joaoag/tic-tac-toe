@@ -20,3 +20,20 @@ def test_play_allows_game_to_be_won(monkeypatch):
     expected_winner = "X"
     actual_winner = play.game.get_winner()
     assert expected_winner == actual_winner
+
+
+def test_play_allows_game_to_be_drawn(monkeypatch):
+    x_o_moves_with_draw = ['1', '2', '3', '4', '6', '5', '7', '9', '8']
+    player_moves_for_draw = "\n".join(x_o_moves_with_draw)
+    first_player_chooses_x = "X\n"
+    players_input = StringIO(f'{first_player_chooses_x}{player_moves_for_draw}')
+    monkeypatch.setattr("sys.stdin", players_input)
+    board = Board()
+    game = Game(board)
+    play = Play(game)
+    play.play()
+
+    expected = True
+    actual = game.is_draw()
+
+    assert expected == actual
