@@ -34,9 +34,18 @@ class Play:
     def get_player_characters(self):
         while self._get_is_selecting_character():
             selected_character = get_character()
-            self.game.handle_character_selection(selected_character)
-            is_selecting = self.game.is_selecting_characters()
-            self._set_is_selecting_character(is_selecting)
+            is_valid_selection = self.game.handle_character_selection(
+                selected_character
+            )
+            if not is_valid_selection:
+                announcements.invalid_character_selection(selected_character)
+            else:
+                is_selecting = self.game.is_selecting_characters()
+                play_order = self.game.get_play_order()
+                announcements.characters_selection(
+                    first_player=play_order[1], second_player=play_order[2]
+                )
+                self._set_is_selecting_character(is_selecting)
 
     def get_player_moves(self):
         while self._get_is_playing():

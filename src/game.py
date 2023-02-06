@@ -61,9 +61,6 @@ class Game:
     def _implement_play_order(self, first_character: str):
         self._set_play_order(first_character)
         self._set_current_player(first_character)
-        announcements.characters_selection(
-            first_player=self._play_order[1], second_player=self._play_order[2]
-        )
 
     def is_selecting_characters(self) -> bool:
         return self._is_selecting_characters
@@ -79,8 +76,10 @@ class Game:
             self.set_is_selecting_characters(False)
             return is_valid_selection
         else:
-            announcements.invalid_character_selection(first_character)
             return is_valid_selection
+
+    def get_play_order(self) -> dict[int, str]:
+        return self._play_order
 
     def _set_play_order(self, first_character: str):
         second_character = (
