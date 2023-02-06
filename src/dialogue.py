@@ -5,5 +5,5 @@ def get_next_move(current_player) -> str:
 
 def get_character() -> str:
     first_character = input("Please enter player one's character: X or O\n")
-    first_character_cleaned = first_character.strip().upper()
+    first_character_cleaned = first_character.strip()
     return first_character_cleaned

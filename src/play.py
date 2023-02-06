@@ -32,34 +32,40 @@ class Play:
         draw_announcement()
         self._set_is_playing(False)
 
+    def _select(self):
+        selected_character = get_character()
+        is_valid_selection = self.game.handle_character_selection(selected_character)
+        if not is_valid_selection:
+            announcements.invalid_character_selection(selected_character)
+
     def get_player_characters(self):
         while self._get_is_selecting_character():
-            selected_character = get_character()
-            is_valid_selection = self.game.handle_character_selection(
-                selected_character
-            )
-            if not is_valid_selection:
-                announcements.invalid_character_selection(selected_character)
-            else:
-                is_selecting = self.game.is_selecting_characters()
+            self._select()
+            is_selecting = self.game.is_selecting_characters()
+            if not is_selecting:
                 play_order = self.game.get_play_order()
-                announcements.characters_selection(
-                    first_player=play_order[1], second_player=play_order[2]
-                )
+                announcements.characters_selection(play_order[1], play_order[2])
                 self._set_is_selecting_character(is_selecting)
+
+    def _announce_invalid_move(self, move: str, move_status: str):
+        if move_status == Constants.INVALID_MOVE_TYPE:
+            announcements.invalid_move_selection(move)
+
+        if move_status == Constants.UNAVAILABLE_MOVE:
+            announcements.unavailable_move(move)
+
+    def _move(self):
+        current_player = self.game.get_current_player()
+        move = get_next_move(current_player)
+        move_status = self.game.handle_move(move)
+        if move_status in Constants.INVALID_MOVE_STATUSES:
+            self._announce_invalid_move(move, move_status)
 
     def get_player_moves(self):
         while self._get_is_playing():
-            current_player = self.game.get_current_player()
-            move = get_next_move(current_player)
-            move_status = self.game.handle_move(move)
-            if move_status == Constants.INVALID_MOVE_TYPE:
-                announcements.invalid_move_selection(move)
-
-            if move_status == Constants.UNAVAILABLE_MOVE:
-                announcements.unavailable_move(move)
-
+            self._move()
             print(self.game.get_board())
+
             if self.game.is_won():
                 self._win(announcements.winner)
             if self.game.is_draw():

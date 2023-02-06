@@ -23,3 +23,4 @@ class Constants:
     VALID_MOVE = "valid"
     INVALID_MOVE_TYPE = "invalid"
     UNAVAILABLE_MOVE = "unavailable"
+    INVALID_MOVE_STATUSES = [INVALID_MOVE_TYPE, UNAVAILABLE_MOVE]
