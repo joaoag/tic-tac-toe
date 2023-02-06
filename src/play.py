@@ -1,4 +1,4 @@
-from dialogue import announce_winner, announce_draw
+from src.announcements import announcements
 from src.game import Game
 
 
@@ -26,9 +26,9 @@ class Play:
             self.game.handle_move()  # should a game get a move?...
             print(self.game.get_board())
             if self.game.is_won():
-                self.win(announce_winner)
+                self.win(announcements.winner)
             if self.game.is_draw():
-                self.draw(announce_draw)
+                self.draw(announcements.draw)
 
     def play(self):
         self.get_player_characters()

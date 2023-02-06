@@ -1,12 +1,6 @@
 from src.board import Board
-from src.dialogue import (
-    get_character,
-    get_next_move,
-    announce_character_selection,
-    announce_invalid_character_selection,
-    announce_invalid_move_selection,
-    announce_unavailable_move,
-)
+from src.dialogue import get_character, get_next_move
+from src.announcements import announcements
 from src.constants import GameConstants
 
 
@@ -56,21 +50,20 @@ class Game:
     def handle_move(self):
         move = get_next_move(self._current_player)
         if not self._is_valid_type(move):
-            announce_invalid_move_selection(move)
+            announcements.invalid_move_selection(move)
             return
 
         processed_move = int(move)
         if not self._is_valid_move(processed_move):
-            announce_unavailable_move(processed_move)
+            announcements.unavailable_move(processed_move)
             return
 
         self._move_and_switch_players(processed_move)
 
-
     def _implement_play_order(self, first_character: str):
         self._set_play_order(first_character)
         self._set_current_player(first_character)
-        announce_character_selection(
+        announcements.characters_selection(
             first_player=self._play_order[1], second_player=self._play_order[2]
         )
 
@@ -83,7 +76,7 @@ class Game:
             self._characters_selected = True
             return is_valid_selection
         else:
-            announce_invalid_character_selection(first_character)
+            announcements.invalid_character_selection(first_character)
             return is_valid_selection
 
     def _set_play_order(self, first_character: str):
