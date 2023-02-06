@@ -16,9 +16,7 @@ class Game:
         self._draw = False
         self._is_selecting_characters = True
 
-    def _get_remaining_moves(
-        self, all_cells: set[int] = Constants.ALL_CELLS
-    ) -> set:
+    def _get_remaining_moves(self, all_cells: set[int] = Constants.ALL_CELLS) -> set:
         remaining_moves = all_cells - self._taken_moves
         return remaining_moves
 
@@ -81,9 +79,7 @@ class Game:
 
     def _set_play_order(self, first_character: str):
         second_character = (
-            Constants.NOUGHT
-            if first_character == Constants.CROSS
-            else Constants.CROSS
+            Constants.NOUGHT if first_character == Constants.CROSS else Constants.CROSS
         )
         self._play_order = {1: first_character, 2: second_character}
 
