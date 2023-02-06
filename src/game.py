@@ -15,7 +15,7 @@ class Game:
         self._current_player = ""
         self._winner = None
         self._draw = False
-        self._valid_characters_selected = False
+        self._is_selecting_characters = True
 
     def _get_remaining_moves(
         self, all_cells: set[int] = GameConstants.ALL_CELLS
@@ -65,18 +65,18 @@ class Game:
             first_player=self._play_order[1], second_player=self._play_order[2]
         )
 
-    def is_valid_characters_selected(self) -> bool:
-        return self._valid_characters_selected
+    def is_selecting_characters(self) -> bool:
+        return self._is_selecting_characters
 
-    def set_valid_characters_selected(self, is_selected: bool):
-        self._valid_characters_selected = is_selected
+    def set_is_selecting_characters(self, is_selecting: bool):
+        self._is_selecting_characters = is_selecting
 
-    def request_first_character(self, first_character: str) -> bool:
+    def handle_character_selection(self, first_character: str) -> bool:
         is_valid_selection = first_character in GameConstants.VALID_CHARACTERS
 
         if is_valid_selection:
             self._implement_play_order(first_character)
-            self.set_valid_characters_selected(is_valid_selection)
+            self.set_is_selecting_characters(False)
             return is_valid_selection
         else:
             announcements.invalid_character_selection(first_character)

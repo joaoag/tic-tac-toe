@@ -1,3 +1,5 @@
+from typing import Callable
+
 from dialogue import get_character, get_next_move
 from src.announcements import announcements
 from src.game import Game
@@ -6,33 +8,46 @@ from src.game import Game
 class Play:
     def __init__(self, game: Game):
         self.game = game
-        self.is_playing = True
+        self._is_playing = True
+        self._is_selecting_character = True
 
-    def win(self, win_announcement):
+    def _get_is_playing(self) -> bool:
+        return self._is_playing
+
+    def _set_is_playing(self, is_playing: bool):
+        self._is_playing = is_playing
+
+    def _get_is_selecting_character(self) -> bool:
+        return self._is_selecting_character
+
+    def _set_is_selecting_character(self, is_selecting: bool):
+        self._is_selecting_character = is_selecting
+
+    def _win(self, win_announcement: Callable):
         win_announcement(self.game.get_winner())
-        self.is_playing = False
+        self._set_is_playing(False)
 
-    def draw(self, draw_announcement):
+    def _draw(self, draw_announcement: Callable):
         draw_announcement()
-        self.is_playing = False
+        self._set_is_playing(False)
 
     def get_player_characters(self):
-        character_selection_complete = False
-        while not character_selection_complete:
+        while self._get_is_selecting_character():
             selected_character = get_character()
-            self.game.request_first_character(selected_character)
-            character_selection_complete = self.game.is_valid_characters_selected()
+            self.game.handle_character_selection(selected_character)
+            is_selecting = self.game.is_selecting_characters()
+            self._set_is_selecting_character(is_selecting)
 
     def get_player_moves(self):
-        while self.is_playing:
+        while self._get_is_playing():
             current_player = self.game.get_current_player()
             move = get_next_move(current_player)
             self.game.handle_move(move)
             print(self.game.get_board())
             if self.game.is_won():
-                self.win(announcements.winner)
+                self._win(announcements.winner)
             if self.game.is_draw():
-                self.draw(announcements.draw)
+                self._draw(announcements.draw)
 
     def play(self):
         self.get_player_characters()

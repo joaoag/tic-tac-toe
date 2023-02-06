@@ -21,7 +21,7 @@ def test_game_allows_no_more_than_nine_moves(mock_board):
 def test_game_gets_and_saves_players_characters(mock_board):
     first_player_chooses_o = "O"
     game = Game(mock_board)
-    game.request_first_character(first_player_chooses_o)
+    game.handle_character_selection(first_player_chooses_o)
     expected_order = {1: "O", 2: "X"}
     actual_order = game._get_play_order()
     assert expected_order == actual_order
@@ -35,7 +35,7 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board):
     expected_state = {1: "", 2: ""}
     expected_return_value = False
 
-    actual_return_value = game.request_first_character(invalid_character)
+    actual_return_value = game.handle_character_selection(invalid_character)
     actual_state = game._get_play_order()
 
     assert expected_state == actual_state
@@ -46,7 +46,7 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board):
 def test_game_alternates_players(mock_board):
     first_player_chooses_x = "X"
     game = Game(mock_board)
-    game.request_first_character(first_player_chooses_x)
+    game.handle_character_selection(first_player_chooses_x)
 
     expected_first_turn = "X"
     expected_second_turn = "O"
@@ -70,7 +70,7 @@ def test_game_identifies_win(mock_board):
     x_o_moves_with_x_win = [1, 9, 2, 8]
 
     game = Game(mock_board)
-    game.request_first_character(first_player_chooses_x)
+    game.handle_character_selection(first_player_chooses_x)
     for move in x_o_moves_with_x_win:
         game._move_and_switch_players(move)
 
@@ -86,7 +86,7 @@ def test_game_identifies_draw(mock_board):
     x_o_moves_with_draw = [1, 2, 3, 4, 6, 5, 7, 9, 8]
 
     game = Game(mock_board)
-    game.request_first_character(first_player_chooses_x)
+    game.handle_character_selection(first_player_chooses_x)
     for move in x_o_moves_with_draw:
         game._move_and_switch_players(move)
 
@@ -120,7 +120,7 @@ def test_game_rejects_moves_onto_populated_cells(mock_board, monkeypatch):
     first_player_first_move = 1
     game = Game(mock_board)
 
-    game.request_first_character(first_player_chooses_x)
+    game.handle_character_selection(first_player_chooses_x)
     game._move_and_switch_players(first_player_first_move)
 
     expected = False
