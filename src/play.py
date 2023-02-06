@@ -1,6 +1,7 @@
 from typing import Callable
 
-from dialogue import get_character, get_next_move
+from src.constants import Constants
+from src.dialogue import get_character, get_next_move
 from src.announcements import announcements
 from src.game import Game
 
@@ -51,7 +52,13 @@ class Play:
         while self._get_is_playing():
             current_player = self.game.get_current_player()
             move = get_next_move(current_player)
-            self.game.handle_move(move)
+            move_status = self.game.handle_move(move)
+            if move_status == Constants.INVALID_MOVE_TYPE:
+                announcements.invalid_move_selection(move)
+
+            if move_status == Constants.UNAVAILABLE_MOVE:
+                announcements.unavailable_move(move)
+
             print(self.game.get_board())
             if self.game.is_won():
                 self._win(announcements.winner)
