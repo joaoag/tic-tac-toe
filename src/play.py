@@ -1,3 +1,4 @@
+from dialogue import get_character
 from src.announcements import announcements
 from src.game import Game
 
@@ -18,7 +19,8 @@ class Play:
     def get_player_characters(self):
         characters_selected = False
         while not characters_selected:
-            self.game.request_first_character()
+            selected_character = get_character()
+            self.game.request_first_character(selected_character)
             characters_selected = self.game._characters_selected
 
     def get_player_moves(self):

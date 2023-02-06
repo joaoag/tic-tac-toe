@@ -67,8 +67,7 @@ class Game:
             first_player=self._play_order[1], second_player=self._play_order[2]
         )
 
-    def request_first_character(self) -> bool:
-        first_character = get_character()
+    def request_first_character(self, first_character: str) -> bool:
         is_valid_selection = first_character in GameConstants.VALID_CHARACTERS
 
         if is_valid_selection:
