@@ -1,4 +1,4 @@
-from board import Board
+from src.board import Board
 
 
 def test_board_shows_player_the_board():
