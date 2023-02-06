@@ -10,6 +10,7 @@ This section tells you how to...
 * install dependencies into this environment
 * run the tests
 * use the formatter
+* play the game
 
 The below commands make a couple of assumptions:
 1. You have navigated to the root of the project in the CLI  
@@ -37,4 +38,9 @@ python -m pytest
 ## Format files
 ```console
 black .
+```
+
+## Play the game
+```console
+python -m src.entry_point
 ```
