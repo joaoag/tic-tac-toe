@@ -1,5 +1,4 @@
 from src.board import Board
-from src.dialogue import get_character, get_next_move
 from src.announcements import announcements
 from src.constants import GameConstants
 
@@ -16,7 +15,7 @@ class Game:
         self._current_player = ""
         self._winner = None
         self._draw = False
-        self._characters_selected = False
+        self._valid_characters_selected = False
 
     def _get_remaining_moves(
         self, all_cells: set[int] = GameConstants.ALL_CELLS
@@ -47,8 +46,7 @@ class Game:
     def get_board(self):
         return self._board.get_board()
 
-    def handle_move(self):
-        move = get_next_move(self._current_player)
+    def handle_move(self, move: str):
         if not self._is_valid_type(move):
             announcements.invalid_move_selection(move)
             return
@@ -67,12 +65,18 @@ class Game:
             first_player=self._play_order[1], second_player=self._play_order[2]
         )
 
+    def is_valid_characters_selected(self) -> bool:
+        return self._valid_characters_selected
+
+    def set_valid_characters_selected(self, is_selected: bool):
+        self._valid_characters_selected = is_selected
+
     def request_first_character(self, first_character: str) -> bool:
         is_valid_selection = first_character in GameConstants.VALID_CHARACTERS
 
         if is_valid_selection:
             self._implement_play_order(first_character)
-            self._characters_selected = True
+            self.set_valid_characters_selected(is_valid_selection)
             return is_valid_selection
         else:
             announcements.invalid_character_selection(first_character)
@@ -154,7 +158,7 @@ class Game:
     def _set_current_player(self, player):
         self._current_player = player
 
-    def _get_current_player(self):
+    def get_current_player(self):
         return self._current_player
 
     def _get_moves(self) -> set[int]:

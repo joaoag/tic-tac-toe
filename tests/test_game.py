@@ -1,4 +1,3 @@
-from io import StringIO
 from unittest.mock import patch
 import pytest
 
@@ -19,9 +18,8 @@ def test_game_allows_no_more_than_nine_moves(mock_board):
 
 
 @patch("src.board.Board")
-def test_game_gets_and_saves_players_characters(mock_board, monkeypatch):
+def test_game_gets_and_saves_players_characters(mock_board):
     first_player_chooses_o = "O"
-    # monkeypatch.setattr("sys.stdin", first_player_choice)
     game = Game(mock_board)
     game.request_first_character(first_player_chooses_o)
     expected_order = {1: "O", 2: "X"}
@@ -30,9 +28,7 @@ def test_game_gets_and_saves_players_characters(mock_board, monkeypatch):
 
 
 @patch("src.board.Board")
-def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
-    # first_player_choice = StringIO("A\n")
-    # monkeypatch.setattr("sys.stdin", first_player_choice)
+def test_game_only_allows_player_to_choose_x_or_o(mock_board):
     invalid_character = "A"
     game = Game(mock_board)
 
@@ -47,10 +43,8 @@ def test_game_only_allows_player_to_choose_x_or_o(mock_board, monkeypatch):
 
 
 @patch("src.board.Board")
-def test_game_alternates_players(mock_board, monkeypatch):
+def test_game_alternates_players(mock_board):
     first_player_chooses_x = "X"
-    one_move_each_by_x_and_o = StringIO("9\n3\n")
-    monkeypatch.setattr("sys.stdin", one_move_each_by_x_and_o)
     game = Game(mock_board)
     game.request_first_character(first_player_chooses_x)
 
@@ -58,11 +52,11 @@ def test_game_alternates_players(mock_board, monkeypatch):
     expected_second_turn = "O"
     expected_third_turn = "X"
 
-    actual_first_turn = game._get_current_player()
-    game.handle_move()
-    actual_second_turn = game._get_current_player()
-    game.handle_move()
-    actual_third_turn = game._get_current_player()
+    actual_first_turn = game.get_current_player()
+    game.handle_move("9")
+    actual_second_turn = game.get_current_player()
+    game.handle_move("3")
+    actual_third_turn = game.get_current_player()
 
     assert expected_first_turn == actual_first_turn
     assert expected_second_turn == actual_second_turn
@@ -70,7 +64,7 @@ def test_game_alternates_players(mock_board, monkeypatch):
 
 
 @patch("src.board.Board")
-def test_game_identifies_win(mock_board, monkeypatch):
+def test_game_identifies_win(mock_board):
     mock_board.get_cells.return_value = {"X"}
     first_player_chooses_x = "X"
     x_o_moves_with_x_win = [1, 9, 2, 8]
