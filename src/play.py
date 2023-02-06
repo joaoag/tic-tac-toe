@@ -32,7 +32,7 @@ class Play:
         draw_announcement()
         self._set_is_playing(False)
 
-    def _select(self):
+    def _select_characters(self):
         selected_character = get_character()
         is_valid_selection = self.game.handle_character_selection(selected_character)
         if not is_valid_selection:
@@ -40,7 +40,7 @@ class Play:
 
     def get_player_characters(self):
         while self._get_is_selecting_character():
-            self._select()
+            self._select_characters()
             is_selecting = self.game.is_selecting_characters()
             if not is_selecting:
                 play_order = self.game.get_play_order()
