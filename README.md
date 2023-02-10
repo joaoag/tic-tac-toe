@@ -4,6 +4,13 @@ Welcome to the docs for my tic-tac-toe program 🤓
 # Introduction
 This program allows two players to play tic-tac-toe on the command line.
 
+# To-do
+* Add intro announcement explaining rules and how user input maps to cells
+* Optimise checking for a win. It currently loops over every possible winning sequence, which is inefficient as many are mutually exclusive.
+* Utilise [coverage.py](https://coverage.readthedocs.io/en/7.1.0/) to improve tests
+* Add fixtures that return instantiated classes for class unit tests to reduce repetition 
+* Consider whether `@dataclass` decorator could reduce boilerplate (particularly getters and setters) without reducing usability
+
 # Local development
 This section tells you how to...
 * create and activate a virtual environment to run the code in
