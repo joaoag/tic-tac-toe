@@ -14,7 +14,7 @@ Announcements = namedtuple(
 
 announcements = Announcements(
     lambda invalid_character: print(
-        f"You selected '{invalid_character}', which is not a valid option"
+        f"You selected '{invalid_character}', which is not a valid option. Valid characters are 'X' and 'O'"
     ),
     lambda invalid_move: print(
         f"Your move needs to be a number from 1-9, e.g. '5' but you selected '{invalid_move}'"
