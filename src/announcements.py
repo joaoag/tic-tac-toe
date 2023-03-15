@@ -14,10 +14,10 @@ Announcements = namedtuple(
 
 announcements = Announcements(
     lambda invalid_character: print(
-        f"You selected '{invalid_character}', which is not a valid option. Valid characters are 'X' and 'O'"
+        f"Your character needs to be 'X' or 'O', but you selected '{invalid_character}'."
     ),
     lambda invalid_move: print(
-        f"Your move needs to be a number from 1-9, e.g. '5' but you selected '{invalid_move}'"
+        f"Your move needs to be a number from 1 to 9, but you selected '{invalid_move}'"
     ),
     lambda unavailable_move: print(
         f"Your move needs to be one of the empty cells, but you selected '{unavailable_move}'"
