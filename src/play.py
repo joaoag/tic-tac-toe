@@ -1,7 +1,7 @@
 from typing import Callable
 
 from src.constants import Constants
-from src.dialogue import get_character, get_next_move
+from src.dialogue import request_character, request_next_move
 from src.announcements import announcements
 from src.game import Game
 
@@ -33,7 +33,7 @@ class Play:
         self._set_is_playing(False)
 
     def _select_characters(self):
-        selected_character = get_character()
+        selected_character = request_character()
         is_valid_selection = self.game.handle_character_selection(selected_character)
         if not is_valid_selection:
             announcements.invalid_character_selection(selected_character)
@@ -56,7 +56,7 @@ class Play:
 
     def _move(self):
         current_player = self.game.get_current_player()
-        move = get_next_move(current_player)
+        move = request_next_move(current_player)
         move_status = self.game.handle_move(move)
         if move_status in Constants.INVALID_MOVE_STATUSES:
             self._announce_invalid_move(move, move_status)
