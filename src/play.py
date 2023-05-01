@@ -6,29 +6,17 @@ from src.game import Game
 
 class Play:
     def __init__(self, game: Game):
-        self.game = game
-        self._is_playing = True
-        self._is_selecting_character = True
-
-    def _get_is_playing(self) -> bool:
-        return self._is_playing
-
-    def _set_is_playing(self, is_playing: bool):
-        self._is_playing = is_playing
-
-    def _get_is_selecting_character(self) -> bool:
-        return self._is_selecting_character
-
-    def _set_is_selecting_character(self, is_selecting: bool):
-        self._is_selecting_character = is_selecting
+        self.game: Game = game
+        self._is_playing: bool = True
+        self._is_selecting_character: bool = True
 
     def _win(self):
-        announce(Announcements.WINNER,self.game.get_winner())
-        self._set_is_playing(False)
+        announce(Announcements.WINNER, self.game.get_winner())
+        self._is_playing = False
 
     def _draw(self):
         announce(Announcements.DRAW)
-        self._set_is_playing(False)
+        self._is_playing = False
 
     def _select_characters(self):
         selected_character = request_character()
@@ -37,13 +25,13 @@ class Play:
             announce(Announcements.INVALID_CHARACTER, selected_character)
 
     def get_player_characters(self):
-        while self._get_is_selecting_character():
+        while self._is_selecting_character:
             self._select_characters()
             is_selecting = self.game.is_selecting_characters()
             if not is_selecting:
                 play_order = self.game.get_play_order()
                 announce(Announcements.CHARACTER_SELECTION, play_order[1], play_order[2])
-                self._set_is_selecting_character(is_selecting)
+                self._is_selecting_character = is_selecting
 
     def _announce_invalid_move(self, move: str, move_status: str):
         if move_status == Constants.INVALID_MOVE_TYPE:
@@ -60,7 +48,7 @@ class Play:
             self._announce_invalid_move(move, move_status)
 
     def get_player_moves(self):
-        while self._get_is_playing():
+        while self._is_playing:
             self._move()
             print(self.game.get_board())
 
