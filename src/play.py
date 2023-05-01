@@ -1,8 +1,6 @@
-from typing import Callable
-
 from src.constants import Constants
 from src.dialogue import request_character, request_next_move
-from src.announcements import announcements
+from src.announcements import Announcements, announce
 from src.game import Game
 
 
@@ -24,19 +22,19 @@ class Play:
     def _set_is_selecting_character(self, is_selecting: bool):
         self._is_selecting_character = is_selecting
 
-    def _win(self, win_announcement: Callable):
-        win_announcement(self.game.get_winner())
+    def _win(self):
+        announce(Announcements.WINNER,self.game.get_winner())
         self._set_is_playing(False)
 
-    def _draw(self, draw_announcement: Callable):
-        draw_announcement()
+    def _draw(self):
+        announce(Announcements.DRAW)
         self._set_is_playing(False)
 
     def _select_characters(self):
         selected_character = request_character()
         is_valid_selection = self.game.handle_character_selection(selected_character)
         if not is_valid_selection:
-            announcements.invalid_character_selection(selected_character)
+            announce(Announcements.INVALID_CHARACTER, selected_character)
 
     def get_player_characters(self):
         while self._get_is_selecting_character():
@@ -44,15 +42,15 @@ class Play:
             is_selecting = self.game.is_selecting_characters()
             if not is_selecting:
                 play_order = self.game.get_play_order()
-                announcements.characters_selection(play_order[1], play_order[2])
+                announce(Announcements.CHARACTER_SELECTION, play_order[1], play_order[2])
                 self._set_is_selecting_character(is_selecting)
 
     def _announce_invalid_move(self, move: str, move_status: str):
         if move_status == Constants.INVALID_MOVE_TYPE:
-            announcements.invalid_move_selection(move)
+            announce(Announcements.INVALID_MOVE, move)
 
         if move_status == Constants.UNAVAILABLE_MOVE:
-            announcements.unavailable_move(move)
+            announce(Announcements.UNAVAILABLE_MOVE, move)
 
     def _move(self):
         current_player = self.game.get_current_player()
@@ -67,9 +65,9 @@ class Play:
             print(self.game.get_board())
 
             if self.game.is_won():
-                self._win(announcements.winner)
+                self._win()
             if self.game.is_draw():
-                self._draw(announcements.draw)
+                self._draw()
 
     def play(self):
         self.get_player_characters()
